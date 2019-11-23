@@ -309,6 +309,22 @@ open class XAxisRenderer: AxisRendererBase
             
             drawGridLine(context: context, x: position.x, y: position.y)
         }
+        
+        // add custom semi gridlines
+        for k in stride(from: 1, to: 5, by: 1) {
+            for i in stride(from: 0, to: 25, by: 1) {
+                
+                //left
+                drawGridLineCustom(context: context, fromX: transformer.pixelForValues(x: Double(i) + 0.25, y: Double(k)).x, fromY: transformer.pixelForValues(x: Double(i) + 0.25, y: Double(k)).y, toX: transformer.pixelForValues(x: Double(i) + 0.25, y: Double(k) + 0.25).x, toY: transformer.pixelForValues(x: Double(i) + 0.25, y: Double(k) + 0.25).y)
+                
+                //middle
+                drawGridLineCustom(context: context, fromX: transformer.pixelForValues(x: Double(i) + 0.5, y: Double(k)).x, fromY: transformer.pixelForValues(x: 1.5, y: Double(k)).y, toX: transformer.pixelForValues(x: Double(i) + 0.5, y: Double(k) + 0.5).x, toY: transformer.pixelForValues(x: Double(i) + 0.5, y: Double(k) + 0.5).y)
+                
+                //right
+                drawGridLineCustom(context: context, fromX: transformer.pixelForValues(x: Double(i) + 0.75, y: Double(k)).x, fromY: transformer.pixelForValues(x: Double(i) + 0.75, y: Double(k)).y, toX: transformer.pixelForValues(x: Double(i) + 0.75, y: Double(k) + 0.25).x, toY: transformer.pixelForValues(x: Double(i) + 0.75, y: Double(k) + 0.25).y)
+            }
+        }
+
     }
     
     @objc open var gridClippingRect: CGRect
@@ -328,6 +344,18 @@ open class XAxisRenderer: AxisRendererBase
             context.beginPath()
             context.move(to: CGPoint(x: x, y: viewPortHandler.contentTop))
             context.addLine(to: CGPoint(x: x, y: viewPortHandler.contentBottom))
+            context.strokePath()
+        }
+    }
+    
+    @objc open func drawGridLineCustom(context: CGContext, fromX: CGFloat, fromY: CGFloat, toX: CGFloat, toY: CGFloat)
+    {
+        if fromX >= viewPortHandler.offsetLeft
+            && fromX <= viewPortHandler.chartWidth
+        {
+            context.beginPath()
+            context.move(to: CGPoint(x: fromX, y: fromY))
+            context.addLine(to: CGPoint(x: toX, y: toY))
             context.strokePath()
         }
     }
